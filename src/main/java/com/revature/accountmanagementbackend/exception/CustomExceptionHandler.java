@@ -21,6 +21,18 @@ public class CustomExceptionHandler {
   }
 
   /**
+   * Handle all EntityAlreadyExistsExceptions with a standard response
+   * 
+   * @param exception
+   * @return
+   */
+  @ExceptionHandler(value = EntityAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> alreadyExistsHandler(EntityAlreadyExistsException exception) {
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage()),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  /**
    * Handle all exceptions not already handled with a standard response
    * 
    * @param exception

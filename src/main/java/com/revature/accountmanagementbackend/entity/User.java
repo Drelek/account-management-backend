@@ -1,5 +1,6 @@
 package com.revature.accountmanagementbackend.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   int id;
+  @Column(unique = true)
   String username;
   String password;
 

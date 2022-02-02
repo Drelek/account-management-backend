@@ -44,6 +44,20 @@ public class RoleService {
   }
 
   /**
+   * Read the details of a specific role by name
+   * 
+   * @param name
+   * @return
+   * @throws InvalidEntityException
+   */
+  public Role read(String name) throws InvalidEntityException {
+    Optional<Role> optionalRole = roleRepo.findByName(name);
+    if (optionalRole.isEmpty())
+      throw new InvalidEntityException("Role", name);
+    return optionalRole.get();
+  }
+
+  /**
    * Read all roles from the database
    * 
    * @return
