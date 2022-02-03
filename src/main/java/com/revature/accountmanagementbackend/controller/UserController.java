@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/")
 public class UserController {
   UserService userService;
   PasswordEncoder passwordEncoder;
@@ -40,7 +40,7 @@ public class UserController {
    * @return
    * @throws EntityAlreadyExistsException
    */
-  @PostMapping
+  @PostMapping("/")
   public ResponseEntity<User> create(@RequestBody User user) throws EntityAlreadyExistsException {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     return new ResponseEntity<User>(userService.create(user), HttpStatus.CREATED);
@@ -51,7 +51,7 @@ public class UserController {
    * 
    * @return
    */
-  @GetMapping
+  @GetMapping("/")
   public ResponseEntity<List<User>> readAll() {
     return new ResponseEntity<List<User>>(userService.readAll(), HttpStatus.OK);
   }
@@ -63,7 +63,7 @@ public class UserController {
    * @return
    * @throws InvalidEntityException
    */
-  @GetMapping("/id/{id}")
+  @GetMapping("/id/{id}/")
   public ResponseEntity<User> read(@PathVariable int id) throws InvalidEntityException {
     return new ResponseEntity<User>(userService.read(id), HttpStatus.OK);
   }
@@ -75,7 +75,7 @@ public class UserController {
    * @return
    * @throws InvalidEntityException
    */
-  @GetMapping("/username/{username}")
+  @GetMapping("/username/{username}/")
   public ResponseEntity<User> read(@PathVariable String username) throws InvalidEntityException {
     return new ResponseEntity<User>(userService.read(username), HttpStatus.OK);
   }
@@ -87,8 +87,9 @@ public class UserController {
    * @return
    * @throws InvalidEntityException
    */
-  @PutMapping
+  @PutMapping("/")
   public ResponseEntity<User> update(@RequestBody User user) throws InvalidEntityException {
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     return new ResponseEntity<User>(userService.update(user), HttpStatus.OK);
   }
 
@@ -99,7 +100,7 @@ public class UserController {
    * @return
    * @throws InvalidEntityException
    */
-  @DeleteMapping("/id/{id}")
+  @DeleteMapping("/id/{id}/")
   public ResponseEntity<User> delete(@PathVariable int id) throws InvalidEntityException {
     return new ResponseEntity<User>(userService.delete(id), HttpStatus.OK);
   }
@@ -111,14 +112,14 @@ public class UserController {
    * @return
    * @throws AuthenticationFailedException
    */
-  @PostMapping("/auth")
+  @PostMapping("/auth/")
   public ResponseEntity<Boolean> authenticate(@RequestBody User user) throws AuthenticationFailedException {
     User userFromDb = null;
     try {
       userFromDb = userService.read(user.getUsername());
     } catch (InvalidEntityException e) {
     }
-    if (userFromDb == null || passwordEncoder.matches(user.getPassword(), userFromDb.getPassword()))
+    if (userFromDb == null || !passwordEncoder.matches(user.getPassword(), userFromDb.getPassword()))
       throw new AuthenticationFailedException();
     return new ResponseEntity<Boolean>(true, HttpStatus.OK);
   }

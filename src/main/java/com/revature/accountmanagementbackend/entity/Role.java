@@ -28,8 +28,19 @@ public class Role {
     super();
   }
 
+  public Role(int id) {
+    super();
+    this.id = id;
+  }
+
   public Role(String name) {
     super();
+    this.name = name;
+  }
+
+  public Role(int id, String name) {
+    super();
+    this.id = id;
     this.name = name;
   }
 

@@ -35,7 +35,7 @@ public class UserService {
       existingUser = read(user.getUsername());
     } catch (InvalidEntityException e) {
     }
-    if (existingUser == null)
+    if (existingUser != null)
       throw new EntityAlreadyExistsException("User", "username");
     return userRepo.save(user);
   }
