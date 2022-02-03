@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -26,11 +25,15 @@ public class Account {
   Customer owner;
 
   @OneToMany(mappedBy = "account")
-  @JsonIgnore
+  @JsonIgnoreProperties("account")
   List<Transaction> transactions;
 
   public Account() {
     super();
+  }
+
+  public Account(long accountNumber) {
+    this.accountNumber = accountNumber;
   }
 
   public Account(long accountNumber, double currentBalance) {

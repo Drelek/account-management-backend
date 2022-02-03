@@ -1,6 +1,6 @@
 package com.revature.accountmanagementbackend.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,23 +9,38 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   long referenceNumber;
+
+  @JsonProperty(access = Access.READ_ONLY)
   Date dateTime;
   TransactionType type;
   TransactionMedium medium;
   double amount;
+
+  @JsonProperty(access = Access.READ_ONLY)
   double newBalance;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "account_id", nullable = false)
+  @JsonIgnoreProperties("transactions")
   Account account;
 
   public Transaction() {
     super();
+  }
+
+  public Transaction(TransactionType type, TransactionMedium medium, double amount) {
+    this.type = type;
+    this.medium = medium;
+    this.amount = amount;
   }
 
   public Transaction(long referenceNumber, Date dateTime, TransactionType type, TransactionMedium medium, double amount,
@@ -100,12 +115,4 @@ public class Transaction {
     return "Transaction [account=" + account + ", amount=" + amount + ", dateTime=" + dateTime + ", medium=" + medium
         + ", newBalance=" + newBalance + ", referenceNumber=" + referenceNumber + ", type=" + type + "]";
   }
-}
-
-enum TransactionType {
-  DEPOSIT, WITHDRAWAL
-}
-
-enum TransactionMedium {
-  CASH, TRANSFER
 }

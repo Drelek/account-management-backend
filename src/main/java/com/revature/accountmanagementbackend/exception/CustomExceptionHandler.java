@@ -45,6 +45,18 @@ public class CustomExceptionHandler {
   }
 
   /**
+   * Handle the WithdrawalLimitReachedException with a standard response
+   * 
+   * @param exception
+   * @return
+   */
+  @ExceptionHandler(value = WithdrawalLimitReachedException.class)
+  public ResponseEntity<ErrorResponse> withdrawalFailedHandler(WithdrawalLimitReachedException exception) {
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage()),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  /**
    * Handle all exceptions not already handled with a standard response
    * 
    * @param exception

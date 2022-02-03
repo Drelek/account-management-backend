@@ -9,6 +9,7 @@ import com.revature.accountmanagementbackend.repository.AccountRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountService {
@@ -65,11 +66,11 @@ public class AccountService {
    * @return
    * @throws InvalidEntityException
    */
+  @Transactional
   public Account updateBalance(long accountNumber, double amount) throws InvalidEntityException {
-    Optional<Account> optionalAccount = accountRepo.updateBalanceById(accountNumber, amount);
-    if (optionalAccount.isEmpty())
-      throw new InvalidEntityException("Account", accountNumber);
-    return optionalAccount.get();
+    read(accountNumber);
+    accountRepo.updateBalanceById(accountNumber, amount);
+    return read(accountNumber);
   }
 
   /**
