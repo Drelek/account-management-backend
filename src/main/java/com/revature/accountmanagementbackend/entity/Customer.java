@@ -25,12 +25,17 @@ public class Customer {
   Date dateOfBirth;
 
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+  @JsonIgnoreProperties("owner")
   List<Account> accounts;
 
   @OneToOne(cascade = CascadeType.REFRESH)
   @JoinColumn(name = "user_id")
   @JsonIgnoreProperties("customer")
   User user;
+
+  public Customer(long PAN) {
+    this.PAN = PAN;
+  }
 
   public Customer(long pAN, String proofOfPAN, String citizenUID, String proofOfUID, String name, String address,
       String email, Date dateOfBirth, List<Account> accounts, User user) {
