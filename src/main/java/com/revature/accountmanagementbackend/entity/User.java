@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -26,6 +27,10 @@ public class User {
 
   @JsonProperty(access = Access.WRITE_ONLY)
   String password;
+  boolean usingTemporaryPassword;
+
+  @JsonIgnore
+  String defaultPassword;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "role_id", nullable = false)
@@ -93,5 +98,21 @@ public class User {
   @Override
   public String toString() {
     return "User [id=" + id + ", username=" + username + "]";
+  }
+
+  public boolean isUsingTemporaryPassword() {
+    return usingTemporaryPassword;
+  }
+
+  public void setUsingTemporaryPassword(boolean usingTemporaryPassword) {
+    this.usingTemporaryPassword = usingTemporaryPassword;
+  }
+
+  public String getDefaultPassword() {
+    return defaultPassword;
+  }
+
+  public void setDefaultPassword(String defaultPassword) {
+    this.defaultPassword = defaultPassword;
   }
 }

@@ -19,11 +19,13 @@ import org.springframework.stereotype.Service;
 public class TransactionService {
   TransactionRepo transactionRepo;
   AccountService accountService;
+  EmailService emailService;
 
   @Autowired
-  public TransactionService(TransactionRepo transactionRepo, AccountService accountService) {
+  public TransactionService(TransactionRepo transactionRepo, AccountService accountService, EmailService emailService) {
     this.transactionRepo = transactionRepo;
     this.accountService = accountService;
+    this.emailService = emailService;
   }
 
   /**
@@ -67,7 +69,16 @@ public class TransactionService {
       transaction.setNewBalance(account.getCurrentBalance() - transaction.getAmount());
       accountService.updateBalance(transaction.getAccount().getAccountNumber(), -transaction.getAmount());
     }
-    return transactionRepo.save(transaction);
+    Transaction savedTransaction = transactionRepo.save(transaction);
+
+    // Send email
+    emailService.sendSimpleMessage(account.getOwner().getEmail(), "Transaction complete",
+        String.format("A " + transaction.getType().name().toLowerCase()
+            + " has been posted to your account ending in %04d for the amount of $%.2f.",
+            account.getAccountNumber() % 10000, transaction.getAmount()));
+
+    // Finally return
+    return savedTransaction;
   }
 
   /**

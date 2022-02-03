@@ -9,17 +9,20 @@ import com.revature.accountmanagementbackend.exception.InvalidEntityException;
 import com.revature.accountmanagementbackend.repository.UserRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
   UserRepo userRepo;
   RoleService roleService;
+  PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserService(UserRepo userRepo, RoleService roleService) {
+  public UserService(UserRepo userRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
     this.userRepo = userRepo;
     this.roleService = roleService;
+    this.passwordEncoder = passwordEncoder;
   }
 
   /**
@@ -30,6 +33,12 @@ public class UserService {
    * @throws EntityAlreadyExistsException
    */
   public User create(User user) throws EntityAlreadyExistsException {
+    // Generate random password
+    String defaultPassword = String.format("%06d", (int) (Math.random() * 1000000));
+    user.setUsingTemporaryPassword(true);
+    user.setDefaultPassword(defaultPassword);
+    user.setPassword(passwordEncoder.encode(defaultPassword));
+
     User existingUser = null;
     try {
       existingUser = read(user.getUsername());

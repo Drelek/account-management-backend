@@ -42,7 +42,6 @@ public class UserController {
    */
   @PostMapping("/")
   public ResponseEntity<User> create(@RequestBody User user) throws EntityAlreadyExistsException {
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
     return new ResponseEntity<User>(userService.create(user), HttpStatus.CREATED);
   }
 

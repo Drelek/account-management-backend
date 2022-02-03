@@ -3,6 +3,7 @@ package com.revature.accountmanagementbackend.service;
 import java.util.Optional;
 
 import com.revature.accountmanagementbackend.entity.Customer;
+import com.revature.accountmanagementbackend.entity.User;
 import com.revature.accountmanagementbackend.exception.EntityAlreadyExistsException;
 import com.revature.accountmanagementbackend.exception.InvalidEntityException;
 import com.revature.accountmanagementbackend.repository.CustomerRepo;
@@ -13,10 +14,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
   CustomerRepo customerRepo;
+  UserService userService;
+  EmailService emailService;
 
   @Autowired
-  public CustomerService(CustomerRepo customerRepo) {
+  public CustomerService(CustomerRepo customerRepo, UserService userService, EmailService emailService) {
     this.customerRepo = customerRepo;
+    this.userService = userService;
+    this.emailService = emailService;
   }
 
   /**
@@ -26,15 +31,25 @@ public class CustomerService {
    * @return
    * @throws EntityAlreadyExistsException
    */
-  public Customer create(Customer customer) throws EntityAlreadyExistsException {
+  public Customer create(Customer customer) throws EntityAlreadyExistsException, InvalidEntityException {
+    // Get existing user
+    User user = userService.read("" + customer.getPAN());
+
+    // Check if customer already exists
     Customer existingCustomer = null;
     try {
       existingCustomer = read(customer.getPAN());
     } catch (InvalidEntityException e) {
-
     }
     if (existingCustomer != null)
       throw new EntityAlreadyExistsException("Customer", "PAN");
+
+    // If user is using a temporary email, send them a password
+    if (user.isUsingTemporaryPassword())
+      emailService.sendSimpleMessage(customer.getEmail(), "Welcome to Banking!",
+          "Your login (PAN) is " + customer.getPAN() + " and your temporary password is " + user.getDefaultPassword());
+
+    // Return the created customer
     return customerRepo.save(customer);
   }
 

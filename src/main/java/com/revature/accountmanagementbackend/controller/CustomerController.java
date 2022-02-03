@@ -35,7 +35,8 @@ public class CustomerController {
    * @throws EntityAlreadyExistsException
    */
   @PostMapping("/")
-  public ResponseEntity<Customer> create(@RequestBody Customer customer) throws EntityAlreadyExistsException {
+  public ResponseEntity<Customer> create(@RequestBody Customer customer)
+      throws EntityAlreadyExistsException, InvalidEntityException {
     return new ResponseEntity<Customer>(customerService.create(customer), HttpStatus.OK);
   }
 
