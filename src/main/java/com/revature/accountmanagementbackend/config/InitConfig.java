@@ -8,6 +8,8 @@ import com.revature.accountmanagementbackend.repository.RoleRepo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class InitConfig {
@@ -24,5 +26,10 @@ public class InitConfig {
       Role manager = new Role("Manager");
       roleRepo.saveAll(Arrays.asList(user, manager));
     };
+  }
+
+  @Bean
+  public PasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
   }
 }

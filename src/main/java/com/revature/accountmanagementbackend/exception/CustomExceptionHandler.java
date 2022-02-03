@@ -33,6 +33,18 @@ public class CustomExceptionHandler {
   }
 
   /**
+   * Handle the AuthenticationFailedException with a standard response
+   * 
+   * @param exception
+   * @return
+   */
+  @ExceptionHandler(value = AuthenticationFailedException.class)
+  public ResponseEntity<ErrorResponse> authFailedHandler(AuthenticationFailedException exception) {
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage()),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  /**
    * Handle all exceptions not already handled with a standard response
    * 
    * @param exception
