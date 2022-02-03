@@ -18,7 +18,7 @@ public class Customer {
   String email;
   Date dateOfBirth;
 
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
   List<Account> accounts;
 
   public Customer() {

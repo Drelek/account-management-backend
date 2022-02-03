@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.revature.accountmanagementbackend.entity.User;
 import com.revature.accountmanagementbackend.exception.EntityAlreadyExistsException;
 import com.revature.accountmanagementbackend.exception.InvalidEntityException;
-import com.revature.accountmanagementbackend.repository.RoleRepo;
 import com.revature.accountmanagementbackend.repository.UserRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
