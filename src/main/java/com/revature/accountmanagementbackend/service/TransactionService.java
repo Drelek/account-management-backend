@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.revature.accountmanagementbackend.entity.Account;
 import com.revature.accountmanagementbackend.entity.Transaction;
 import com.revature.accountmanagementbackend.entity.TransactionType;
+import com.revature.accountmanagementbackend.exception.InsufficientFundsException;
 import com.revature.accountmanagementbackend.exception.InvalidEntityException;
 import com.revature.accountmanagementbackend.exception.WithdrawalLimitReachedException;
 import com.revature.accountmanagementbackend.repository.TransactionRepo;
@@ -32,9 +33,14 @@ public class TransactionService {
    * @return
    * @throws InvalidEntityException
    */
-  public Transaction create(Transaction transaction) throws InvalidEntityException, WithdrawalLimitReachedException {
+  public Transaction create(Transaction transaction)
+      throws InvalidEntityException, WithdrawalLimitReachedException, InsufficientFundsException {
     // Get initial account info
     Account account = accountService.read(transaction.getAccount().getAccountNumber());
+
+    // Throw exception if insufficient funds
+    if (transaction.getType() == TransactionType.WITHDRAWAL && account.getCurrentBalance() < transaction.getAmount())
+      throw new InsufficientFundsException();
 
     // Assemble dates
     long currentTime = new Date().getTime();
@@ -49,7 +55,7 @@ public class TransactionService {
         total += t.getAmount();
 
     // Throw exception if we're over cap
-    if (total > 10000)
+    if (transaction.getType() == TransactionType.WITHDRAWAL && total > 10000)
       throw new WithdrawalLimitReachedException(total - 10000);
 
     // Assemble transaction info and commit

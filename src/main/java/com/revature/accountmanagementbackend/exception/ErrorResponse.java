@@ -11,6 +11,7 @@ public class ErrorResponse {
   Date date;
   int code;
   String status;
+  String error;
   String message;
 
   public ErrorResponse() {
@@ -24,6 +25,11 @@ public class ErrorResponse {
     this.code = status.value();
     this.status = status.name();
     this.message = message;
+  }
+
+  public ErrorResponse(HttpStatus status, Exception exception) {
+    this(status, exception.getMessage());
+    this.error = exception.getClass().getName();
   }
 
   public Date getDate() {
@@ -56,5 +62,13 @@ public class ErrorResponse {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public String getError() {
+    return error;
+  }
+
+  public void setError(String error) {
+    this.error = error;
   }
 }

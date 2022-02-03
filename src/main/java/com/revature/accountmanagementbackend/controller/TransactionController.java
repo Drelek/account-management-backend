@@ -3,6 +3,7 @@ package com.revature.accountmanagementbackend.controller;
 import java.util.List;
 
 import com.revature.accountmanagementbackend.entity.Transaction;
+import com.revature.accountmanagementbackend.exception.InsufficientFundsException;
 import com.revature.accountmanagementbackend.exception.InvalidEntityException;
 import com.revature.accountmanagementbackend.exception.WithdrawalLimitReachedException;
 import com.revature.accountmanagementbackend.service.TransactionService;
@@ -36,7 +37,7 @@ public class TransactionController {
    */
   @PostMapping("/")
   public ResponseEntity<Transaction> create(@RequestBody Transaction transaction)
-      throws InvalidEntityException, WithdrawalLimitReachedException {
+      throws InvalidEntityException, WithdrawalLimitReachedException, InsufficientFundsException {
     return new ResponseEntity<Transaction>(transactionService.create(transaction), HttpStatus.CREATED);
   }
 

@@ -17,7 +17,7 @@ public class CustomExceptionHandler {
   @ExceptionHandler(value = InvalidEntityException.class)
   public ResponseEntity<ErrorResponse> invalidEntityHandler(InvalidEntityException invalidEntityException) {
     return new ResponseEntity<ErrorResponse>(
-        new ErrorResponse(HttpStatus.NOT_FOUND, invalidEntityException.getMessage()), HttpStatus.NOT_FOUND);
+        new ErrorResponse(HttpStatus.NOT_FOUND, invalidEntityException), HttpStatus.NOT_FOUND);
   }
 
   /**
@@ -28,7 +28,7 @@ public class CustomExceptionHandler {
    */
   @ExceptionHandler(value = EntityAlreadyExistsException.class)
   public ResponseEntity<ErrorResponse> alreadyExistsHandler(EntityAlreadyExistsException exception) {
-    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage()),
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception),
         HttpStatus.BAD_REQUEST);
   }
 
@@ -40,7 +40,7 @@ public class CustomExceptionHandler {
    */
   @ExceptionHandler(value = AuthenticationFailedException.class)
   public ResponseEntity<ErrorResponse> authFailedHandler(AuthenticationFailedException exception) {
-    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage()),
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception),
         HttpStatus.BAD_REQUEST);
   }
 
@@ -52,7 +52,19 @@ public class CustomExceptionHandler {
    */
   @ExceptionHandler(value = WithdrawalLimitReachedException.class)
   public ResponseEntity<ErrorResponse> withdrawalFailedHandler(WithdrawalLimitReachedException exception) {
-    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage()),
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  /**
+   * Handle the InsufficientFundsException with a standard response
+   * 
+   * @param exception
+   * @return
+   */
+  @ExceptionHandler(value = InsufficientFundsException.class)
+  public ResponseEntity<ErrorResponse> insufficientFundsHandler(InsufficientFundsException exception) {
+    return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.BAD_REQUEST, exception),
         HttpStatus.BAD_REQUEST);
   }
 
@@ -65,7 +77,7 @@ public class CustomExceptionHandler {
   @ExceptionHandler(value = Exception.class)
   public ResponseEntity<ErrorResponse> genericExceptionHandler(Exception exception) {
     return new ResponseEntity<ErrorResponse>(
-        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
 }
