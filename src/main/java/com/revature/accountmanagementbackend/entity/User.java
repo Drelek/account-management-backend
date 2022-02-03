@@ -7,7 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "users")
@@ -17,11 +21,24 @@ public class User {
   int id;
   @Column(unique = true)
   String username;
+  @JsonIgnore
   String password;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "role_id", nullable = false)
   Role role;
+
+  @OneToOne(mappedBy = "user")
+  @JsonIgnoreProperties("user")
+  Customer customer;
+
+  public Customer getCustomer() {
+    return customer;
+  }
+
+  public void setCustomer(Customer customer) {
+    this.customer = customer;
+  }
 
   public User() {
     super();
@@ -31,6 +48,11 @@ public class User {
     super();
     this.username = username;
     this.password = password;
+  }
+
+  public User(int id) {
+    super();
+    this.id = id;
   }
 
   public int getId() {

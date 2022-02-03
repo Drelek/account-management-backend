@@ -6,13 +6,19 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Customer {
   @Id
   long PAN;
+  String proofOfPAN;
   String citizenUID;
+  String proofOfUID;
   String name;
   String address;
   String email;
@@ -21,13 +27,40 @@ public class Customer {
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
   List<Account> accounts;
 
+  @OneToOne(cascade = CascadeType.REFRESH)
+  @JoinColumn(name = "user_id")
+  @JsonIgnoreProperties("customer")
+  User user;
+
+  public Customer(long pAN, String proofOfPAN, String citizenUID, String proofOfUID, String name, String address,
+      String email, Date dateOfBirth, List<Account> accounts, User user) {
+    PAN = pAN;
+    this.proofOfPAN = proofOfPAN;
+    this.citizenUID = citizenUID;
+    this.proofOfUID = proofOfUID;
+    this.name = name;
+    this.address = address;
+    this.email = email;
+    this.dateOfBirth = dateOfBirth;
+    this.accounts = accounts;
+    this.user = user;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   public Customer() {
     super();
   }
 
-  public Customer(long pAN, String citizenUID, String name, String address, String email, Date dateOfBirth) {
+  public Customer(long PAN, String citizenUID, String name, String address, String email, Date dateOfBirth) {
     super();
-    PAN = pAN;
+    this.PAN = PAN;
     this.citizenUID = citizenUID;
     this.name = name;
     this.address = address;
@@ -89,5 +122,21 @@ public class Customer {
 
   public void setAccounts(List<Account> accounts) {
     this.accounts = accounts;
+  }
+
+  public String getProofOfPAN() {
+    return proofOfPAN;
+  }
+
+  public void setProofOfPAN(String proofOfPAN) {
+    this.proofOfPAN = proofOfPAN;
+  }
+
+  public String getProofOfUID() {
+    return proofOfUID;
+  }
+
+  public void setProofOfUID(String proofOfUID) {
+    this.proofOfUID = proofOfUID;
   }
 }
